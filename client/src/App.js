@@ -26,6 +26,9 @@ class App extends Component {
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
+      if (networkId !== 42) {
+        alert(`This DApp works exlusively on Kovan Testnet`);
+      }
       const deployedNetwork = BTCToPrivateETH.networks[networkId];
       const instance = new web3.eth.Contract(
         BTCToPrivateETH.abi,
