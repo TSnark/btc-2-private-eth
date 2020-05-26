@@ -20,13 +20,13 @@ To withdraw your private ETH, go to Tornado Cash and present the secret note fro
 
 This DApp performs the following steps:
 
-1. Queries the latest price of the pair zBTC/ETH on Uniswap
+1. Queries the latest price of the pair zBTC/ETH on Uniswap V2
 
 2. Sets up a REN VM mint and transfer to convert BTC into zBTC Once the transfer is confirmed
 
 3. Mints new zBTC using the REN VM signature
 
-4. Converts zBTC into ETH
+4. Converts zBTC into ETH on Uniswap V2
 
 5. Deposits ETH into Tornado Cash
 
