@@ -10,5 +10,6 @@ export default function copyToClipboard(containerid) {
     range.selectNode(document.getElementById(containerid));
     window.getSelection().addRange(range);
     document.execCommand("copy");
+    window.getSelection().removeAllRanges();
   }
 }

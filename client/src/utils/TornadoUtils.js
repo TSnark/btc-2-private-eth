@@ -33,11 +33,6 @@ function createDeposit({ nullifier, secret }) {
   return deposit;
 }
 
-/**
- * Make a deposit
- * @param currency Сurrency
- * @param amount Deposit amount
- */
 export async function deposit(web3, ethToRetrieve) {
   let netId = await web3.eth.net.getId();
   const decimalEth = ethToRetrieve / 1e18;
@@ -47,17 +42,6 @@ export async function deposit(web3, ethToRetrieve) {
   });
   const note = toHex(deposit.preimage, 62);
   const noteString = `tornado-eth-${decimalEth}-${netId}-${note}`;
-
-  // const value = 1e17;
-  // const senderAccount = (await web3.eth.getAccounts())[0];
-  // const deployedNetwork = tornadoContract.networks[netId];
-  // const tornado = new web3.eth.Contract(
-  //   tornadoContract.abi,
-  //   deployedNetwork && deployedNetwork.address
-  // );
-  // await tornado.methods
-  //   .deposit(toHex(deposit.commitment))
-  //   .send({ value, from: senderAccount, gas: 2e6 });
 
   return { note: noteString, commitment: toHex(deposit.commitment) };
 }

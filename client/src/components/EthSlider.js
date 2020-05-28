@@ -32,13 +32,14 @@ function gweiValue(value) {
   return marks.find((mark) => mark.value === value).valueInGwei;
 }
 
-export default function EthSlider({ onChange }) {
+export default function EthSlider({ onChange, disabled }) {
   return (
     <div>
       <Typography id="eth-slider" gutterBottom>
         Amount of ETH to retrieve
       </Typography>
       <Slider
+        disabled={disabled}
         defaultValue={0}
         valueLabelFormat={valueLabelFormat}
         getAriaValueText={valuetext}

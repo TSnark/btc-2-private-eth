@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import RenJS from "@renproject/ren";
 import BTCToPrivateETH from "./contracts/BTCToPrivateETH.json";
 import getWeb3 from "./getWeb3";
-import ConvertApp from "./ConvertApp";
+import ConvertCard from "./pages/MainPage";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import "./App.css";
@@ -10,6 +9,12 @@ import "./App.css";
 const darkTheme = createMuiTheme({
   palette: {
     type: "dark",
+    primary: {
+      main: "#183a56",
+    },
+    secondary: {
+      main: "#464159",
+    },
   },
 });
 
@@ -53,11 +58,10 @@ class App extends Component {
     }
     return (
       <ThemeProvider theme={darkTheme}>
-        <ConvertApp
+        <ConvertCard
           web3={web3}
-          renJS={new RenJS("testnet")}
           contractAddress={contract.options.address}
-        ></ConvertApp>
+        ></ConvertCard>
       </ThemeProvider>
     );
   }

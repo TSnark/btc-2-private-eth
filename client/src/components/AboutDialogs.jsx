@@ -15,6 +15,7 @@ const styles = (theme) => ({
   root: {
     margin: 0,
     padding: theme.spacing(3),
+    backgroundColor: "#19172b",
   },
   closeButton: {
     position: "absolute",
@@ -44,11 +45,12 @@ const DialogTitle = withStyles(styles)((props) => {
 
 const DialogContent = withStyles((theme) => ({
   root: {
-    padding: theme.spacing(2),
+    backgroundColor: "#19172b",
+    padding: theme.spacing(2, 4, 2, 4),
   },
 }))(MuiDialogContent);
 
-export default function AboutDialogs() {
+export default function AboutDialog() {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -69,79 +71,104 @@ export default function AboutDialogs() {
         open={open}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          <Typography variant="h3" gutterBottom>
-            How does this work
-          </Typography>
+          BTC to Private ETH
         </DialogTitle>
         <DialogContent dividers>
-          <Typography variant="h5" gutterBottom>
-            Deposits
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            This DApp converts your BTC into private ETH.
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            After your BTC transfer is confirmed (2 blocks), you can withdraw
-            your ETH to a wallet of your choice without having any on chain link
-            between the BTC you sent and the ETH you received.
-          </Typography>
-          <Typography variant="h5" gutterBottom>
-            Withdrawals
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            To withdraw your private ETH, go to{" "}
-            <Link href="https://tornado.cash/" color="white">
+          <Typography variant="subtitle1" gutterBottom>
+            This project allows you to acquire privacy preserving Ether with
+            your Bitcoins. It uses{" "}
+            <Link
+              href="https://renproject.io/"
+              target="_blank"
+              color="inherit"
+              underline="always"
+            >
+              RenVm
+            </Link>
+            {", "}
+            <Link
+              href="https://uniswap.org/"
+              target="_blank"
+              color="inherit"
+              underline="always"
+            >
+              Uniswap
+            </Link>
+            {" and "}
+            <Link
+              href="https://tornado.cash/"
+              target="_blank"
+              color="inherit"
+              underline="always"
+            >
               Tornado Cash
-            </Link>{" "}
-            and present the secret note from this Dapp.
+            </Link>
+            .
           </Typography>
-          <Typography gutterBottom variant="h5">
-            Technical explanation.
-          </Typography>
-          <Typography gutterBottom>
-            This DApp performs the following steps:
+          <Typography variant="h6" gutterBottom>
+            How to deposit
           </Typography>
           <List>
             <ListItem>
               <Typography gutterBottom>
-                1) Queries the latest price of the pair zBTC/ETH on{" "}
-                <Link href="https://uniswap.org/" color="white">
-                  Uniswap
-                </Link>
+                1) Select the required ETH amount
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <Typography gutterBottom>2) Press the start button</Typography>
+            </ListItem>
+            <ListItem>
+              <Typography gutterBottom>
+                3) Send the required BTC amount to the RenVM address displayed
               </Typography>
             </ListItem>
             <ListItem>
               <Typography gutterBottom>
-                2) Sets up a{" "}
-                <Link href="https://renproject.io/" color="white">
-                  REN VM{" "}
-                </Link>
-                mint and transfer to convert BTC into zBTC Once the transfer is
-                confirmed
+                4) Wait for the confirmations, this takes 2 blocks. You will be
+                notified by the dApp when the confirmations are verified.
               </Typography>
             </ListItem>
             <ListItem>
               <Typography gutterBottom>
-                3) Mints new zBTC using the REN VM signature
-              </Typography>
-            </ListItem>
-            <ListItem>
-              <Typography gutterBottom>4) Converts zBTC into ETH</Typography>
-            </ListItem>
-            <ListItem>
-              <Typography gutterBottom>
-                5) Deposits ETH into{" "}
-                <Link href="https://tornado.cash/" color="white">
-                  Tornado Cash
-                </Link>
+                5) When prompted sign the transaction in your Ethereum wallet.
               </Typography>
             </ListItem>
             <ListItem>
               <Typography gutterBottom>
-                6) Forwards the remainder ETH to the originating user Address
+                6) Backup the Tornado Cash note for future withdrawal
               </Typography>
             </ListItem>
           </List>
+          <Typography variant="h6" gutterBottom>
+            How to withdraw
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            To withdraw your private ETH, go to{" "}
+            <Link
+              href="https://tornado.cash/"
+              target="_blank"
+              color="inherit"
+              underline="always"
+            >
+              Tornado Cash
+            </Link>{" "}
+            and present the secret note provided by this dApp.
+          </Typography>
+          <Typography gutterBottom variant="h6">
+            Technical explanation.
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            For explanation and source code go to the{" "}
+            <Link
+              href="https://github.com/TSnark/btc-2-private-eth"
+              color="inherit"
+              target="_blank"
+              underline="always"
+            >
+              project page
+            </Link>{" "}
+            and present the secret note provided by this dApp.
+          </Typography>
         </DialogContent>
       </Dialog>
     </div>

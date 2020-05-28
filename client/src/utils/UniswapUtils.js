@@ -1,4 +1,5 @@
 import IUniswapV2Pair from "../contracts/IUniswapV2Pair.json";
+import JSBI from "jsbi";
 
 import { Token, TokenAmount, Pair, WETH } from "@uniswap/sdk";
 
@@ -27,17 +28,15 @@ export default async function estimateAmountToSwap(web3, amountToConvertInWei) {
 
   let ethAmount = new TokenAmount(uniswapETH, amountToConvertInWei);
   try {
-    let btcAmount = uniswapPair.getInputAmount(ethAmount)[0];
-
+    const btcTokenAmount = uniswapPair.getInputAmount(ethAmount)[0];
+    let btcToTransfer = add10PercentSafetyMargin(btcTokenAmount.raw);
     return {
-      btcToTransfer: add10PercentSafetyMargin(btcAmount).toFixed(
-        uniswapBTC.decimals
-      ),
+      btcToTransfer,
       ethReserveInWei: reserve1,
     };
   } catch (e) {
     return {
-      btcToTransfer: "0",
+      btcToTransfer: 0,
       ethReserveInWei: reserve1,
     };
   }
@@ -45,5 +44,8 @@ export default async function estimateAmountToSwap(web3, amountToConvertInWei) {
 
 // We add a safety margin in case the price moves while we wait for confirmations
 function add10PercentSafetyMargin(amount) {
-  return amount.multiply("11").divide("10");
+  return JSBI.divide(
+    JSBI.multiply(amount, JSBI.BigInt("11")),
+    JSBI.BigInt("10")
+  );
 }

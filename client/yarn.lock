@@ -1680,6 +1680,21 @@
     bs58 "^4.0.1"
     wallet-address-validator "^0.2.4"
 
+"@renproject/chains@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@renproject/chains/-/chains-1.0.1.tgz#a60117abe7e0e0e5140fe90e77494a53795c7497"
+  integrity sha512-/85NHdMvLkGgEJyd/4Yrp2N8GD1ydK74AoOa5DstIu9UtIJUaar7ph0AsM7wuLdyDTHvTABMuispp+xApR843Q==
+  dependencies:
+    "@renproject/interfaces" "^1.0.1"
+    "@types/bs58" "^4.0.1"
+    "@types/node" "^14.0.5"
+    bchaddrjs "^0.4.8"
+    bitcore-lib "^8.20.3"
+    bitcore-lib-cash "^8.20.3"
+    bitcore-lib-zcash zcash-hackworks/bitcore-lib-zcash
+    bs58 "^4.0.1"
+    wallet-address-validator "^0.2.4"
+
 "@renproject/contracts@^0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@renproject/contracts/-/contracts-0.6.0.tgz#1a565e4ccb2418cae3df51eb4dad37cb1d27e9d5"
@@ -1695,10 +1710,30 @@
     "@renproject/ren-js-common" "^0.1.12"
     "@types/bn.js" "^4.11.6"
 
+"@renproject/gateway@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@renproject/gateway/-/gateway-1.0.1.tgz#4f510eddca25842937eb1ce32e54cc4d4c2297da"
+  integrity sha512-lBkhKbuXvb9C3yRt//4dUbslS542Wp+9haYfgUUI3lkC3wCfm78zy25k+K4ECA6WoWJAK6sES48Bzd+udPmdig==
+  dependencies:
+    "@renproject/interfaces" "^1.0.1"
+    "@renproject/utils" "^1.0.1"
+    "@types/node" "^14.0.5"
+    push.js "^1.0.12"
+    web3 "^2.0.0-alpha.1"
+
 "@renproject/interfaces@^1.0.0-alpha.11":
   version "1.0.0-alpha.11"
   resolved "https://registry.yarnpkg.com/@renproject/interfaces/-/interfaces-1.0.0-alpha.11.tgz#d59c8009a313335ebedc83bce2f5ceb41876c8a3"
   integrity sha512-bV2FrVUs8O61kcOB4ZgFsDDmm2RAXFZ8DnODQmM3l9TghTjpY7swlbGhY9TW51XcmF5iEXdVMIYXFAEVJE/EPQ==
+  dependencies:
+    "@types/node" "^13.13.4"
+    bignumber.js "^9.0.0"
+    web3-core "^2.0.0-alpha.1"
+
+"@renproject/interfaces@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@renproject/interfaces/-/interfaces-1.0.1.tgz#69a81af03bd81fe01347fa840d690a29b35eb85d"
+  integrity sha512-MZ/89MWBCRYgxvHf3XDyxUluSfpHD+wTMwLPZ94X3TN9l1mV2MsSkEaMuzgNomOwn/PxMulGlFJNZjuCsBdgWg==
   dependencies:
     "@types/node" "^13.13.4"
     bignumber.js "^9.0.0"
@@ -1766,6 +1801,25 @@
     "@renproject/chains" "^1.0.0-alpha.11"
     "@renproject/contracts" "^0.6.0"
     "@renproject/interfaces" "^1.0.0-alpha.11"
+    "@types/node" "^14.0.5"
+    axios "^0.19.2"
+    bignumber.js "^9.0.0"
+    ethereumjs-util "^7.0.1"
+    events "^3.1.0"
+    immutable "^4.0.0-rc.12"
+    send-crypto "0.2.3"
+    web3 "^2.0.0-alpha.1"
+    web3-core "^2.0.0-alpha.1"
+    web3-eth-abi "^2.0.0-alpha.1"
+
+"@renproject/utils@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@renproject/utils/-/utils-1.0.1.tgz#aefd4807c62c2deb2990716b0301bd67e8940c3a"
+  integrity sha512-aD+Vioxvisdxci5se1Oa1jLUkshuccXPgHS0lZDMXVb1TJ1scJpZ6Jx9pq9BwuM/XEq2XSKQxuHPmbWR4a2ViA==
+  dependencies:
+    "@renproject/chains" "^1.0.1"
+    "@renproject/contracts" "^0.6.0"
+    "@renproject/interfaces" "^1.0.1"
     "@types/node" "^14.0.5"
     axios "^0.19.2"
     bignumber.js "^9.0.0"
@@ -8623,7 +8677,7 @@ js-yaml@^3.13.0, js-yaml@^3.13.1:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
-jsbi@^3.1.1:
+jsbi@^3.1.1, jsbi@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/jsbi/-/jsbi-3.1.2.tgz#7502ed36fb2b32bb37efb3d2d0b3806a0d771780"
   integrity sha512-5nDXo1X9QVaXK/Cpb5VECV9ss1QPbjUuk1qSruHB1PK/g39Sd414K4nci99ElFDZv0vzxDEnKn3o49/Tn9Yagw==
@@ -11480,6 +11534,11 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
+push.js@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/push.js/-/push.js-1.0.12.tgz#5703a03f5d286cd46d58564cb27bc079898d26b1"
+  integrity sha512-Mo/zkrPD58hcbMvC/9WveUPGz0PJ4T5UwQJP6DnMYbyxe7b1xM/9qqmJTMmDcprbZjCtLzf9wWtek7gA8O9QBw==
+
 pushdata-bitcoin@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/pushdata-bitcoin/-/pushdata-bitcoin-1.0.1.tgz#15931d3cd967ade52206f523aa7331aef7d43af7"
@@ -13643,6 +13702,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typeface-roboto@^0.0.75:
+  version "0.0.75"
+  resolved "https://registry.yarnpkg.com/typeface-roboto/-/typeface-roboto-0.0.75.tgz#98d5ba35ec234bbc7172374c8297277099cc712b"
+  integrity sha512-VrR/IiH00Z1tFP4vDGfwZ1esNqTiDMchBEXYY9kilT6wRGgFoCAlgkEUMHb1E3mB0FsfZhv756IF0+R+SFPfdg==
 
 typeforce@^1.11.3:
   version "1.18.0"
