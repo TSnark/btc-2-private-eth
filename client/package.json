@@ -10,6 +10,7 @@
     "@material-ui/styles": "^4.9.2",
     "@renproject/gateway-js": "^0.3.2",
     "@renproject/ren": "^1.0.0",
+    "@uniswap/sdk": "^2.0.5",
     "circomlib": "git+https://github.com/tornadocash/circomlib.git#c372f14d324d57339c88451834bf2824e73bbdbc",
     "crypto-browserify": "^3.12.0",
     "react": "^16.12.0",
@@ -45,9 +46,9 @@
     ]
   },
   "devDependencies": {
-    "prettier": "2.0.5",
-    "execa": "latest",
     "chalk": "latest",
-    "node-emoji": "latest"
+    "execa": "latest",
+    "node-emoji": "latest",
+    "prettier": "2.0.5"
   }
 }

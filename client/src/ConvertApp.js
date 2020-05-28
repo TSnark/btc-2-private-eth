@@ -59,6 +59,8 @@ export default function ConvertApp({ web3, renJS, contractAddress }) {
   const [mint, setMint] = useState();
   const [ethToRetrieve, setEthToRetrieve] = useState(1e17);
   const [btcToTransfer, setBtcToTransfer] = useState(0);
+  const [ethReserveInWei, setEthReserveInWei] = useState(0);
+  const [ethAvailable, setEthAvailable] = useState(true);
   const [gatewayAddress, setGatewayAddress] = useState();
   const [loadingState, setLoadingState] = useState({
     loading: false,
@@ -69,9 +71,11 @@ export default function ConvertApp({ web3, renJS, contractAddress }) {
   useEffect(() => {
     async function init() {
       const accounts = await web3.eth.getAccounts();
-      let btcToTransfer =
-        (await estimateAmountToSwap(web3, ethToRetrieve)) / 1e8;
+      let poolValues = await estimateAmountToSwap(web3, ethToRetrieve);
+      let { btcToTransfer, ethReserveInWei } = poolValues;
       setBtcToTransfer(btcToTransfer);
+      setEthReserveInWei(ethReserveInWei);
+      setEthAvailable(ethReserveInWei > ethToRetrieve);
       let { note, commitment } = await tornado(web3, ethToRetrieve);
       setNote(note);
       const mint = renJS.lockAndMint({
@@ -110,7 +114,7 @@ export default function ConvertApp({ web3, renJS, contractAddress }) {
       setGatewayAddress(gatewayAddress);
     }
     init();
-  }, [ethToRetrieve, contractAddress, renJS, web3]);
+  }, [ethToRetrieve, ethReserveInWei, contractAddress, renJS, web3]);
 
   const deposit = async () => {
     setLoadingState({
@@ -160,38 +164,51 @@ export default function ConvertApp({ web3, renJS, contractAddress }) {
               <Grid item xs={12} sm={12}>
                 <EthSlider onChange={setEthToRetrieve} />
               </Grid>
-              <Grid item xs={12}>
-                <CopiableCard
-                  id="btc-amount"
-                  title="Send this BTC amount"
-                  content={btcToTransfer}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <CopiableCard
-                  id="btc-address"
-                  title="To the following REN VM address"
-                  content={gatewayAddress}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <CopiableCard
-                  id="tornado-note"
-                  title="Back up your Tornado Cash note for withdrawal"
-                  content={note}
-                />
-              </Grid>
+              {ethAvailable ? (
+                <>
+                  <Grid item xs={12}>
+                    <CopiableCard
+                      id="btc-amount"
+                      title="Send this BTC amount"
+                      content={btcToTransfer}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <CopiableCard
+                      id="btc-address"
+                      title="To the following REN VM address"
+                      content={gatewayAddress}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <CopiableCard
+                      id="tornado-note"
+                      title="Back up your Tornado Cash note for withdrawal"
+                      content={note}
+                    />
+                  </Grid>
+                </>
+              ) : (
+                <Grid item xs={12}>
+                  <Alert severity="error">
+                    Insufficient ETH in Uniswap:{" "}
+                    {(ethReserveInWei / 1e18).toFixed(8)} ETH
+                  </Alert>
+                </Grid>
+              )}
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={() => deposit()}
-            >
-              {`I have sent ${btcToTransfer} BTC`}
-            </Button>
+            {ethAvailable && (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={() => deposit()}
+              >
+                {`I have sent ${btcToTransfer} BTC`}
+              </Button>
+            )}
             <Grid container justify="flex-end">
               <Grid item>
                 <Dialog
