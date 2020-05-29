@@ -160,7 +160,7 @@ export default function ConvertCard() {
                     className={classes.submit}
                     onClick={() => deposit()}
                   >
-                    Start
+                    Convert BTC to Private ETH
                   </Button>
                 ) : (
                   <ConnectButton onConnect={setWeb3} />
