@@ -12,6 +12,7 @@
     "@renproject/gateway-js": "^0.3.2",
     "@renproject/ren": "^1.0.0",
     "@uniswap/sdk": "^2.0.5",
+    "@walletconnect/web3-provider": "^1.0.0-beta.47",
     "circomlib": "git+https://github.com/tornadocash/circomlib.git#c372f14d324d57339c88451834bf2824e73bbdbc",
     "crypto-browserify": "^3.12.0",
     "jsbi": "^3.1.2",
@@ -21,7 +22,8 @@
     "react-scripts": "3.4.0",
     "snarkjs": "git+https://github.com/tornadocash/snarkjs.git#869181cfaf7526fe8972073d31655493a04326d5",
     "typeface-roboto": "^0.0.75",
-    "web3": "^1.2.6"
+    "web3": "^1.2.6",
+    "web3modal": "^1.6.3"
   },
   "resolutions": {
     "scrypt": "https://registry.npmjs.org/scrypt-js/-/scrypt-js-3.0.0.tgz"
