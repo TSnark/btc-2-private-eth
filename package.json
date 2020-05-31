@@ -1,0 +1,26 @@
+{
+  "name": "p-ramp",
+  "version": "0.0.1",
+  "description": "Smart contracts for P-Ramp",
+  "homepage": "https://TSnark.github.io/btc-2-private-eth",
+  "repository": "git@github.com:TSnark/btc-2-private-eth.git",
+  "author": "TSnark <753334917@protonmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomiclabs/buidler": "^1.3.5",
+    "@nomiclabs/buidler-ethers": "^1.3.3",
+    "@nomiclabs/buidler-waffle": "^1.3.4",
+    "@truffle/hdwallet-provider": "^1.0.35",
+    "chai": "^4.2.0",
+    "ethereum-waffle": "^2.5.1",
+    "ethers": "^4.0.47",
+    "mocha": "^7.2.0",
+    "prettier": "^2.0.5",
+    "prettier-plugin-solidity": "^1.0.0-alpha.53",
+    "solc": "^0.6.8"
+  },
+  "scripts": {
+    "build": "waffle",
+    "test": "mocha"
+  }
+}

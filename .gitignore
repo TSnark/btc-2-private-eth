@@ -4,3 +4,5 @@ private.js
 .history
 .DS_Store
 do-not-commit
+cache
+artifacts

@@ -2,7 +2,7 @@ import BTCToPrivateETH from "../contracts/BTCToPrivateETH.json";
 import React, { useState, useEffect, useCallback } from "react";
 import GatewayJS from "@renproject/gateway";
 import { deposit as tornado } from "../utils/TornadoUtils";
-import estimateAmountToSwap from "../utils/UniswapUtils";
+import estimateAmountToSwap from "../utils/PricingUtils";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { Card, CardContent } from "@material-ui/core";
@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import EthSlider from "../components/EthSlider";
 import TornadoCashNote from "../components/TornadoCashNote";
 import ConnectButton from "../components/ConnectButton";
+import JSBI from "jsbi";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -41,7 +42,7 @@ export default function ConvertCard() {
   const [contractAddress, setContractAddress] = useState();
   const [commitment, setCommitment] = useState();
   const [ethToRetrieve, setEthToRetrieve] = useState(1e17);
-  const [btcToTransfer, setBtcToTransfer] = useState(0);
+  const [btcToTransferInSats, setBtcToTransferInSats] = useState(0);
   const [gatewayJS] = useState(new GatewayJS("testnet"));
   const [ethReserveInWei, setEthReserveInWei] = useState(0);
   const [ethAvailable, setEthAvailable] = useState(true);
@@ -74,8 +75,8 @@ export default function ConvertCard() {
         setContractAddress(BTCToPrivateETH.networks[networkId].address);
         memoizedCallback();
         let poolValues = await estimateAmountToSwap(web3, ethToRetrieve);
-        let { btcToTransfer, ethReserveInWei } = poolValues;
-        setBtcToTransfer(btcToTransfer);
+        let { btcToTransferInSats, ethReserveInWei } = poolValues;
+        setBtcToTransferInSats(btcToTransferInSats);
         setEthReserveInWei(ethReserveInWei);
         setEthAvailable(ethReserveInWei > ethToRetrieve);
         let { note, commitment } = await tornado(web3, ethToRetrieve);
@@ -91,6 +92,7 @@ export default function ConvertCard() {
   const deposit = async () => {
     setLoading(true);
     const accounts = await web3.eth.getAccounts();
+    console.log(ethToRetrieve);
     try {
       await gatewayJS
         .open({
@@ -98,7 +100,7 @@ export default function ConvertCard() {
           sendToken: GatewayJS.Tokens.BTC.Btc2Eth,
 
           // Amount of BTC we are sending (in Satoshis)
-          suggestedAmount: btcToTransfer,
+          suggestedAmount: btcToTransferInSats,
 
           sendTo: contractAddress,
 
@@ -118,6 +120,11 @@ export default function ConvertCard() {
               name: "_commitment",
               type: "bytes32",
               value: commitment,
+            },
+            {
+              name: "_ethAmount",
+              type: "uint256",
+              value: JSBI.BigInt(ethToRetrieve),
             },
           ],
 

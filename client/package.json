@@ -1,7 +1,6 @@
 {
   "name": "btc-2-private-eth",
   "version": "0.1.0",
-  "private": true,
   "homepage": "https://TSnark.github.io/btc-2-private-eth",
   "dependencies": {
     "@material-ui/core": "^4.9.10",

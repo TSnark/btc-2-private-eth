@@ -29,23 +29,29 @@ export default async function estimateAmountToSwap(web3, amountToConvertInWei) {
   let ethAmount = new TokenAmount(uniswapETH, amountToConvertInWei);
   try {
     const btcTokenAmount = uniswapPair.getInputAmount(ethAmount)[0];
-    let btcToTransfer = add10PercentSafetyMargin(btcTokenAmount.raw);
+    let btcToTransferInSats = addPricingSafetyMargin(btcTokenAmount.raw);
+    console.log(btcToTransferInSats);
     return {
-      btcToTransfer,
+      btcToTransferInSats: btcToTransferInSats,
       ethReserveInWei: reserve1,
     };
   } catch (e) {
+    console.log(e);
     return {
-      btcToTransfer: 0,
+      btcToTransferInSats: 0,
       ethReserveInWei: reserve1,
     };
   }
 }
 
-// We add a safety margin in case the price moves while we wait for confirmations
-function add10PercentSafetyMargin(amount) {
+const renVMFeesInSats = "35000";
+// We add a safety margin and fees in case the price moves while we wait for confirmations
+function addPricingSafetyMargin(amount) {
+  // Add RenVM miners fees
+  const amountWithMinersFees = JSBI.add(amount, JSBI.BigInt(renVMFeesInSats));
+  // Add 1% buffer to in case the price moves during confirmation this also includes 0.1% RenVM fees
   return JSBI.divide(
-    JSBI.multiply(amount, JSBI.BigInt("11")),
-    JSBI.BigInt("10")
+    JSBI.multiply(amountWithMinersFees, JSBI.BigInt("101")),
+    JSBI.BigInt("100")
   );
 }

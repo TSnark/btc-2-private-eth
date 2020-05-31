@@ -19,17 +19,78 @@
           "type": "address"
         }
       ],
-      "payable": false,
       "stateMutability": "nonpayable",
       "type": "constructor"
     },
     {
-      "payable": true,
-      "stateMutability": "payable",
-      "type": "fallback"
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_originator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "BtcReturned",
+      "type": "event"
     },
     {
-      "constant": false,
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_originator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "_commitment",
+          "type": "bytes32"
+        }
+      ],
+      "name": "Deposited",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_originator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "EthReturned",
+      "type": "event"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive",
+      "payable": true
+    },
+    {
       "inputs": [
         {
           "internalType": "address payable",
@@ -40,6 +101,11 @@
           "internalType": "bytes32",
           "name": "_commitment",
           "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_ethAmount",
+          "type": "uint256"
         },
         {
           "internalType": "uint256",
@@ -59,21 +125,19 @@
       ],
       "name": "deposit",
       "outputs": [],
-      "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
   "networks": {
     "42": {
-      "events": {},
       "links": {},
-      "address": "0xCcc268A02b7F3b9D4A7BA98c57BF3Ef227A78f34",
-      "transactionHash": "0x09192c14d338cd09cdc00d45a97d186373d5aa035566f870d8390611de187080"
+      "address": "0xF332f06462bd8263E5e497A772BCE7C2cb51bb53",
+      "transactionHash": "0x6bcee54241381b622d0b2af00eb1d21d8da215348f2d38acfbdd7dbce9f725c1"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2020-05-25T13:26:47.761Z",
+  "updatedAt": "2020-05-31T17:32:36.793Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
