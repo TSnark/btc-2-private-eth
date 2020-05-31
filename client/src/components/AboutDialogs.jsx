@@ -64,7 +64,7 @@ export default function AboutDialog() {
 
   return (
     <div>
-      <Button color="secondary" onClick={handleClickOpen}>
+      <Button color="default" onClick={handleClickOpen}>
         How it works
       </Button>
       <Dialog
