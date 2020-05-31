@@ -35,8 +35,8 @@ function gweiValue(value) {
 export default function EthSlider({ onChange, disabled }) {
   return (
     <div>
-      <Typography id="eth-slider" gutterBottom>
-        Amount of ETH to retrieve
+      <Typography id="eth-slider" variant="h6" gutterBottom>
+        Amount to retrieve
       </Typography>
       <Slider
         disabled={disabled}

@@ -16,7 +16,6 @@ import JSBI from "jsbi";
 const useStyles = makeStyles((theme) => ({
   card: {
     borderRadius: 24,
-    minWidth: 256,
     textAlign: "center",
   },
   cardTitle: {
@@ -38,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ConvertCard() {
   const [web3, setWeb3] = useState();
-  const [note, setNote] = useState();
+  const [note, setNote] = useState("Tornado cash note will appear here");
   const [contractAddress, setContractAddress] = useState();
   const [commitment, setCommitment] = useState();
   const [ethToRetrieve, setEthToRetrieve] = useState(1e17);
@@ -70,7 +69,7 @@ export default function ConvertCard() {
     async function init() {
       const networkId = await web3.eth.net.getId();
       if (networkId !== 42) {
-        alert(`This DApp works exlusively on Kovan Testnet`);
+        alert(`This dApp works exlusively on Kovan Testnet`);
       } else {
         setContractAddress(BTCToPrivateETH.networks[networkId].address);
         memoizedCallback();
@@ -91,9 +90,8 @@ export default function ConvertCard() {
 
   const deposit = async () => {
     setLoading(true);
-    const accounts = await web3.eth.getAccounts();
-    console.log(ethToRetrieve);
     try {
+      const accounts = await web3.eth.getAccounts();
       await gatewayJS
         .open({
           // Send BTC from the Bitcoin blockchain to the Ethereum blockchain.

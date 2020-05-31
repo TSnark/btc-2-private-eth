@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const styles = (theme) => ({
   root: {
@@ -44,13 +45,15 @@ const DialogTitle = withStyles(styles)((props) => {
 
 const DialogContent = withStyles((theme) => ({
   root: {
-    backgroundColor: "#19172b",
-    padding: theme.spacing(2, 4, 2, 4),
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2, 4, 2),
   },
 }))(MuiDialogContent);
 
 export default function AboutDialog() {
   const [open, setOpen] = React.useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -68,6 +71,7 @@ export default function AboutDialog() {
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        fullScreen={fullScreen}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           BTC to Private ETH

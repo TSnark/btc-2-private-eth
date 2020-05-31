@@ -12,8 +12,13 @@ const useStyles = makeStyles((theme) => ({
     height: "100vh",
   },
   content: {
+    [theme.breakpoints.up("sm")]: {
+      marginTop: theme.spacing(16),
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: theme.spacing(0, 1, 0),
+    },
     minHeight: "100vh",
-    marginTop: theme.spacing(16),
   },
 }));
 

@@ -21,7 +21,6 @@ export default function ConnectButton({ onConnect }) {
         walletconnect: {
           package: WalletConnectProvider,
           options: {
-            // Mikko's test key - don't copy as your mileage may vary
             infuraId: "34551d538c09417bab045d7ae2b20a83",
           },
         },

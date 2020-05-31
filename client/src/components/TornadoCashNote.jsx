@@ -13,6 +13,9 @@ const textFieldStyles = makeStyles((theme) => ({
   root: {
     borderRadius: 24,
   },
+  disabled: {
+    color: theme.palette.text.primary,
+  },
 }));
 
 const tooltipStyles = makeStyles((theme) => ({
@@ -48,6 +51,11 @@ export default function TornadoCashNote({ id, title, content }) {
             {
               "You will use this note to retrieve your private ETH from Tornado Cash."
             }
+            <Typography color="inherit">
+              <u>
+                <b>{"Do not share it!"}</b>
+              </u>
+            </Typography>
             <Typography color="inherit">
               <u>
                 <b>{"Do not lose it!"}</b>
