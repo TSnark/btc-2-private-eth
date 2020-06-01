@@ -7,9 +7,9 @@ import "./App.css";
 const darkTheme = createMuiTheme({
   palette: {
     type: "dark",
-    background: { default: "#160e1f", paper: "#19172b" },
+    background: { default: "#020024", paper: "#095679" },
     primary: {
-      main: "#183a56",
+      main: "#00d4ff",
     },
     secondary: {
       main: "#464159",
