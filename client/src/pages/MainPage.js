@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
     background:
-      "linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(9,86,121,1) 47%, rgba(0,212,255,1) 96%)",
+      "linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(9,86,121,1) 100%, rgba(0,212,255,1) 100%)",
   },
   content: {
     [theme.breakpoints.up("sm")]: {

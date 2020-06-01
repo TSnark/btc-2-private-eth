@@ -46,7 +46,7 @@ export default function ConnectButton({ onConnect }) {
       type="submit"
       fullWidth
       variant="contained"
-      color="primary"
+      color="secondary"
       className={classes.submit}
       onClick={() => memoizedConnect()}
     >

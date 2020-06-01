@@ -7,12 +7,12 @@ import "./App.css";
 const darkTheme = createMuiTheme({
   palette: {
     type: "dark",
-    background: { default: "#020024", paper: "#095679" },
+    background: { default: "#020024", paper: "rgba(0, 212, 255, 0.08)" },
     primary: {
       main: "#00d4ff",
     },
     secondary: {
-      main: "#464159",
+      main: "#586e9a",
     },
   },
 });

@@ -53,12 +53,7 @@ export default function TornadoCashNote({ id, title, content }) {
             }
             <Typography color="inherit">
               <u>
-                <b>{"Do not share it!"}</b>
-              </u>
-            </Typography>
-            <Typography color="inherit">
-              <u>
-                <b>{"Do not lose it!"}</b>
+                <b>{"Keep it private and safe."}</b>
               </u>
             </Typography>
           </>

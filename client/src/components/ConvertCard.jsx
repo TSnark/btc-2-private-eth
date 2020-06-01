@@ -138,7 +138,7 @@ export default function ConvertCard() {
   };
 
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} variant="outlined">
       <CardContent className={classes.cardContent}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -161,7 +161,7 @@ export default function ConvertCard() {
                     type="submit"
                     fullWidth
                     variant="contained"
-                    color="primary"
+                    color="secondary"
                     className={classes.submit}
                     onClick={() => deposit()}
                   >
