@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles, useTheme, makeStyles } from "@material-ui/core/styles";
+import { withStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -24,12 +24,6 @@ const styles = (theme) => ({
     color: theme.palette.grey[500],
   },
 });
-
-const dialogStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: "rgba(9,86,121,1)",
-  },
-}));
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
@@ -59,7 +53,6 @@ const DialogContent = withStyles((theme) => ({
 export default function AboutDialog() {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
-  const dialogClasses = dialogStyles();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleClickOpen = () => {
@@ -71,11 +64,10 @@ export default function AboutDialog() {
 
   return (
     <div>
-      <Button color="default" onClick={handleClickOpen}>
+      <Button color="secondary" onClick={handleClickOpen}>
         How it works
       </Button>
       <Dialog
-        className={dialogClasses.root}
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
