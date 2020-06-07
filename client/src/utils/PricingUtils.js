@@ -30,7 +30,6 @@ export default async function estimateAmountToSwap(web3, amountToConvertInWei) {
   try {
     const btcTokenAmount = uniswapPair.getInputAmount(ethAmount)[0];
     let btcToTransferInSats = addPricingSafetyMargin(btcTokenAmount.raw);
-    console.log(btcToTransferInSats);
     return {
       btcToTransferInSats: btcToTransferInSats,
       ethReserveInWei: reserve1,

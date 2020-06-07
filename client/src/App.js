@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import MainPage from "./pages/MainPage";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-
+import CssBaseline from "@material-ui/core/CssBaseline";
 import "./App.css";
 
 const darkTheme = createMuiTheme({
@@ -23,6 +23,7 @@ class App extends Component {
   render() {
     return (
       <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
         <MainPage />
       </ThemeProvider>
     );

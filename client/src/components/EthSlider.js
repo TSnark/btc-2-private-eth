@@ -9,14 +9,19 @@ const marks = [
     label: "0.1 ETH",
   },
   {
-    value: 50,
+    value: 33,
     valueInGwei: 1e18,
     label: "1 ETH",
   },
   {
-    value: 100,
+    value: 66,
     valueInGwei: 1e19,
     label: "10 ETH",
+  },
+  {
+    value: 100,
+    valueInGwei: 1e20,
+    label: "100 ETH",
   },
 ];
 

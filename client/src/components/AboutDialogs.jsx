@@ -67,12 +67,7 @@ export default function AboutDialog() {
       <Button color="secondary" onClick={handleClickOpen}>
         How it works
       </Button>
-      <Dialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-        fullScreen={fullScreen}
-      >
+      <Dialog onClose={handleClose} open={open} fullScreen={fullScreen}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           BTC to Private ETH
         </DialogTitle>
@@ -114,21 +109,21 @@ export default function AboutDialog() {
           <List>
             <ListItem>
               <Typography gutterBottom>
-                1) Select the required ETH amount
+                1) Select the required ETH amount.
               </Typography>
             </ListItem>
             <ListItem>
-              <Typography gutterBottom>2) Press the start button</Typography>
+              <Typography gutterBottom>2) Press the start button.</Typography>
             </ListItem>
             <ListItem>
               <Typography gutterBottom>
-                3) Send the required BTC amount to the RenVM address displayed
+                3) Send the required BTC amount to the RenVM address displayed.
               </Typography>
             </ListItem>
             <ListItem>
               <Typography gutterBottom>
-                4) Wait for the confirmations, this takes 2 blocks. You will be
-                notified by the dApp when the confirmations are verified.
+                4) Wait for bitcoin confirmations, this takes 2 blocks. You will
+                be notified by the dApp when all confirmations are verified.
               </Typography>
             </ListItem>
             <ListItem>
@@ -138,7 +133,7 @@ export default function AboutDialog() {
             </ListItem>
             <ListItem>
               <Typography gutterBottom>
-                6) Backup the Tornado Cash note for future withdrawal
+                6) Backup the Tornado Cash note for future withdrawal.
               </Typography>
             </ListItem>
           </List>

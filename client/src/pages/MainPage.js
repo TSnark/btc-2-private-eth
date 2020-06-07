@@ -1,51 +1,51 @@
-import React from "react";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
-import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Header from "../components/Header";
 import ConvertCard from "../components/ConvertCard";
+import ConnectScreen from "../components/ConnectScreen";
+import Web3Context from "../state/Web3Context";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    height: "100vh",
-  },
   content: {
     [theme.breakpoints.up("sm")]: {
       marginTop: theme.spacing(16),
     },
     [theme.breakpoints.down("xs")]: {
-      padding: theme.spacing(0, 1, 0),
+      padding: theme.spacing(0, 2, 0),
+      marginTop: theme.spacing(3),
     },
-    minHeight: "100vh",
   },
 }));
 
 export default function MainPage() {
   const classes = useStyles();
+  const [web3, setWeb3] = useState();
 
   return (
-    <Grid container className={classes.root}>
-      <CssBaseline />
-      <Header />
-      <Grid
-        container
-        spacing={4}
-        alignItems="center"
-        className={classes.content}
-        direction="column"
-      >
-        <Grid item>
-          <Alert severity="warning">
-            This is a test project not meant for real use. It operates on
-            Bitcoin testnet and Ethereum Kovan testnet
-          </Alert>
+    <Web3Context.Provider value={web3}>
+      <Grid container className={classes.root}>
+        <Header />
+        <Grid
+          container
+          spacing={4}
+          alignItems="center"
+          className={classes.content}
+          direction="column"
+        >
+          <Container component="main" maxWidth="xs">
+            {!web3 ? (
+              <ConnectScreen
+                onConnect={setWeb3}
+                onDisconnect={() => setWeb3(null)}
+              />
+            ) : (
+              <ConvertCard />
+            )}
+          </Container>
         </Grid>
-        <Container component="main" maxWidth="xs">
-          <ConvertCard />
-        </Container>
       </Grid>
-    </Grid>
+    </Web3Context.Provider>
   );
 }
