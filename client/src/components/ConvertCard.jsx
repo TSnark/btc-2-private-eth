@@ -56,7 +56,7 @@ const prepareDeposit = async (web3, ethToRetrieve) => {
   };
 };
 
-export default function ConvertCard(deposit) {
+export default function ConvertCard({ deposit }) {
   const [ethToRetrieve, setEthToRetrieve] = useState(1e17);
   const [converting, setConverting] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -92,7 +92,7 @@ export default function ConvertCard(deposit) {
       await deposit(
         preparedDeposit.result.btcToTransferInSats,
         preparedDeposit.result.commitment,
-        preparedDeposit.result.ethToRetrieve
+        ethToRetrieve
       );
       setConverting(false);
     } catch (error) {

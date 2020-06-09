@@ -5,41 +5,61 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import JSBI from "jsbi";
 import Web3Context from "../state/Web3Context";
 import ConvertCard from "./ConvertCard";
+import GridLoader from "react-spinners/GridLoader";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  spinner: {
+    display: "flex",
+    justifyContent: "center",
+    margin: theme.spacing(24, 0, 0),
+  },
+}));
 
 export default function ConvertScreen() {
   const [contractAddress, setContractAddress] = useState();
+  const [loading, setLoading] = useState(true);
   const [gatewayJS] = useState(new GatewayJS("testnet"));
   const [recovering, setRecovering] = useState(false);
   const { web3, accounts, networkId } = useContext(Web3Context);
-
+  const classes = useStyles();
   // We recover only the previous "active" transaction and force the user
   // to deal with it.
   const recoverLastTransfer = useCallback(async () => {
     // Load previous transfer from local storage
+    setLoading(true);
     const previousGateways = await gatewayJS.getGateways();
     const previousTransfers = Array.from(previousGateways.values());
+    setLoading(false);
+
     // Resume last transfer if still active
     if (isActiveTransfer(previousTransfers[0])) {
-      setRecovering(previousTransfers);
-      gatewayJS
-        .recoverTransfer(web3.currentProvider, previousTransfers[0])
-        .pause()
-        .result()
-        .catch((e) => console.log(e));
+      setRecovering(previousTransfers[0]);
+
+      try {
+        await gatewayJS
+          .recoverTransfer(web3.currentProvider, previousTransfers[0])
+          .pause()
+          .result();
+      } catch (e) {
+        console.log(e);
+      }
     }
   }, [web3, gatewayJS]);
 
-  useEffect(() => {
-    recoverLastTransfer();
-    setContractAddress(BTCToPrivateETH.networks[networkId].address);
-  }, [networkId, recoverLastTransfer]);
-
   function isActiveTransfer(previousTransfer) {
     return (
-      (!!previousTransfer && previousTransfer.status === "mint_deposited") ||
-      previousTransfer.status === "mint_returnedFromRenVM"
+      !!previousTransfer &&
+      (previousTransfer.status === "mint_deposited" ||
+        previousTransfer.status === "mint_returnedFromRenVM")
     );
   }
+
+  useEffect(() => {
+    // setLoading(true);
+    recoverLastTransfer(setLoading);
+    setContractAddress(BTCToPrivateETH.networks[networkId].address);
+  }, [networkId, recoverLastTransfer]);
 
   const deposit = async (btcToTransferInSats, commitment, ethToRetrieve) => {
     await gatewayJS
@@ -82,7 +102,13 @@ export default function ConvertScreen() {
       .result();
   };
 
-  if (recovering) {
+  if (loading) {
+    return (
+      <div className={classes.spinner}>
+        <GridLoader size={16} color={"#123abc"} loading={loading} />
+      </div>
+    );
+  } else if (!!recovering) {
     return (
       <Alert severity="warning">
         <AlertTitle>Pending transaction detected. </AlertTitle>

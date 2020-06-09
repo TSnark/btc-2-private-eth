@@ -21,6 +21,7 @@
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.12.0",
     "react-scripts": "3.4.0",
+    "react-spinners": "^0.8.3",
     "snarkjs": "git+https://github.com/tornadocash/snarkjs.git#869181cfaf7526fe8972073d31655493a04326d5",
     "typeface-roboto": "^0.0.75",
     "use-constant": "^1.0.0",

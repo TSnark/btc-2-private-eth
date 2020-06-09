@@ -20,3 +20,7 @@
 .App-link {
   color: #09d3ac;
 }
+
+._ren_gateway-minified > ._ren_iframeShadow {
+  margin-top: calc(100vh - calc(294px / 2));
+}
