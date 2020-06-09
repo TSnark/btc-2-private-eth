@@ -138,6 +138,30 @@ export default function AboutDialog() {
             </ListItem>
           </List>
           <Typography variant="h6" gutterBottom>
+            Lot sizes and price movement
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Tornado cash accepts only specific deposit amounts, this app
+            calculates the BTC amount to be converted and adds a 1% buffer to
+            absorb price movements in the renBTC/ETH trading pair which can
+            happen while confirmations are verified. The remainder of the
+            conversion will be sent to your Ethereum address shown in the
+            toolbar. In case the price moves too much and the desired lot size
+            cannot be acquired in Uniswap, the whole renBTC amount will be
+            forwarded to the address shown in the toolbar.
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            Transaction recovery
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            In case the tab containing this app is closed whilst a transaction
+            is not fully finalized, re-opening the app will prompt the user to
+            finalize the pending transaction. For this reason is very important
+            to copy and store the withdrawal note before starting any
+            transaction as the app can only recover the previous transaction but
+            not the previous note.
+          </Typography>
+          <Typography variant="h6" gutterBottom>
             How to withdraw
           </Typography>
           <Typography variant="body1" gutterBottom>
@@ -151,6 +175,12 @@ export default function AboutDialog() {
               Tornado Cash
             </Link>{" "}
             and present the secret note provided by this dApp.
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            <strong>
+              Never withdraw immediately after a deposit. Before withdrawing
+              read the guide provided on the Tornado Cash website
+            </strong>
           </Typography>
           <Typography gutterBottom variant="h6">
             Technical explanation.

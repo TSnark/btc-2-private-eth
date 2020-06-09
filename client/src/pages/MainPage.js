@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Header from "../components/Header";
-import ConvertCard from "../components/ConvertCard";
+import ConvertScreen from "../components/ConvertScreen";
 import ConnectScreen from "../components/ConnectScreen";
 import Web3Context from "../state/Web3Context";
 
@@ -21,10 +21,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MainPage() {
   const classes = useStyles();
-  const [web3, setWeb3] = useState();
+  const [web3State, setWeb3State] = useState({ connected: false });
 
   return (
-    <Web3Context.Provider value={web3}>
+    <Web3Context.Provider value={web3State}>
       <Grid container className={classes.root}>
         <Header />
         <Grid
@@ -35,13 +35,13 @@ export default function MainPage() {
           direction="column"
         >
           <Container component="main" maxWidth="xs">
-            {!web3 ? (
+            {!web3State.connected ? (
               <ConnectScreen
-                onConnect={setWeb3}
-                onDisconnect={() => setWeb3(null)}
+                onConnect={setWeb3State}
+                onDisconnect={() => setWeb3State({ connected: false })}
               />
             ) : (
-              <ConvertCard />
+              <ConvertScreen />
             )}
           </Container>
         </Grid>

@@ -1,16 +1,15 @@
-import BTCToPrivateETH from "../contracts/BTCToPrivateETH.json";
-import React, { useState, useEffect, useContext } from "react";
-import GatewayJS from "@renproject/gateway";
+import React, { useState, useContext } from "react";
 import { deposit as tornado } from "../utils/TornadoUtils";
 import estimateAmountToSwap from "../utils/PricingUtils";
 import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
 import Grid from "@material-ui/core/Grid";
+import { FormGroup, FormControlLabel } from "@material-ui/core";
 import { Card, CardContent } from "@material-ui/core";
-import { Alert, AlertTitle } from "@material-ui/lab";
+import { Alert } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/core/styles";
-import EthSlider from "../components/EthSlider";
-import TornadoCashNote from "../components/TornadoCashNote";
-import JSBI from "jsbi";
+import EthSlider from "./EthSlider";
+import TornadoCashNote from "./TornadoCashNote";
 import { useAsync } from "react-async-hook";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 import useConstant from "use-constant";
@@ -32,13 +31,16 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(6),
     paddingLeft: theme.spacing(6),
   },
+  checkbox: {
+    margin: theme.spacing(2, 0, 0),
+  },
   submit: {
     borderRadius: 24,
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(2, 0, 2),
   },
 }));
 
-const generateNote = async (web3, ethToRetrieve) => {
+const prepareDeposit = async (web3, ethToRetrieve) => {
   let { btcToTransferInSats, ethReserveInWei } = await estimateAmountToSwap(
     web3,
     ethToRetrieve
@@ -54,66 +56,44 @@ const generateNote = async (web3, ethToRetrieve) => {
   };
 };
 
-export default function ConvertCard() {
-  const [contractAddress, setContractAddress] = useState();
+export default function ConvertCard(deposit) {
   const [ethToRetrieve, setEthToRetrieve] = useState(1e17);
-  const [gatewayJS] = useState(new GatewayJS("testnet"));
   const [converting, setConverting] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+
   const classes = useStyles();
-  const { web3, accounts, networkId } = useContext(Web3Context);
-  const debouncedGenerateNote = useConstant(() =>
-    AwesomeDebouncePromise(generateNote, 300)
+  const { web3 } = useContext(Web3Context);
+
+  // We debounce to avoid race conditions on state changes
+  const debouncedPrepareDeposit = useConstant(() =>
+    AwesomeDebouncePromise((web3, ethToRetrieve) => {
+      setAgreed(false);
+      return prepareDeposit(web3, ethToRetrieve);
+    }, 300)
   );
 
-  const asyncNote = useAsync(debouncedGenerateNote, [web3, ethToRetrieve], {
-    setLoading: (state) => ({ ...state, loading: true }),
-  });
+  // Call debounced function asynchronously...
+  const preparedDeposit = useAsync(
+    debouncedPrepareDeposit,
+    [web3, ethToRetrieve],
+    {
+      // ...refresh state only after call returns
+      setLoading: (state) => ({ ...state, loading: true }),
+    }
+  );
 
-  useEffect(() => {
-    setContractAddress(BTCToPrivateETH.networks[networkId].address);
-  }, [networkId]);
+  const handleCheckBoxEvent = (event) => {
+    setAgreed(event.target.checked);
+  };
 
-  const deposit = async () => {
+  const onDeposit = async () => {
     setConverting(true);
     try {
-      await gatewayJS
-        .open({
-          // Send BTC from the Bitcoin blockchain to the Ethereum blockchain.
-          sendToken: GatewayJS.Tokens.BTC.Btc2Eth,
-
-          // Amount of BTC we are sending (in Satoshis)
-          suggestedAmount: asyncNote.result.btcToTransferInSats,
-
-          sendTo: contractAddress,
-
-          // The name of the function we want to call
-          contractFn: "deposit",
-
-          nonce: GatewayJS.utils.randomNonce(),
-
-          // Arguments expected for calling `deposit`
-          contractParams: [
-            {
-              name: "_to",
-              type: "address",
-              value: accounts[0],
-            },
-            {
-              name: "_commitment",
-              type: "bytes32",
-              value: asyncNote.result.commitment,
-            },
-            {
-              name: "_ethAmount",
-              type: "uint256",
-              value: JSBI.BigInt(ethToRetrieve),
-            },
-          ],
-
-          // Web3 provider for submitting mint to Ethereum
-          web3Provider: web3.currentProvider,
-        })
-        .result();
+      await deposit(
+        preparedDeposit.result.btcToTransferInSats,
+        preparedDeposit.result.commitment,
+        preparedDeposit.result.ethToRetrieve
+      );
       setConverting(false);
     } catch (error) {
       setConverting(false);
@@ -122,12 +102,12 @@ export default function ConvertCard() {
   };
 
   const NoteOrWarning = () => {
-    return asyncNote.result && !asyncNote.result.enoughLiquidity ? (
+    return preparedDeposit.result && !preparedDeposit.result.enoughLiquidity ? (
       <Grid item xs={12}>
         <Alert severity="error">
           Insufficient ETH in Uniswap:{" "}
-          {asyncNote.result &&
-            (asyncNote.result.ethReserveInWei / 1e18).toFixed(8)}{" "}
+          {preparedDeposit.result &&
+            (preparedDeposit.result.ethReserveInWei / 1e18).toFixed(8)}{" "}
           ETH
         </Alert>
       </Grid>
@@ -137,20 +117,34 @@ export default function ConvertCard() {
           <TornadoCashNote
             id="tornado-note"
             title="Tornado Cash Note"
-            content={asyncNote.result.note}
+            content={preparedDeposit.result.note}
           />
         </Grid>
-
+        <Grid item xs={12}>
+          <FormGroup row className={classes.checkbox}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  disabled={!!converting}
+                  checked={agreed}
+                  onChange={handleCheckBoxEvent}
+                  name="agreeCB"
+                  color="primary"
+                />
+              }
+              label="I have safely stored this note"
+            />
+          </FormGroup>
+        </Grid>
         <Grid item xs={12}>
           <Button
-            disabled={!!converting}
+            disabled={!!converting || !agreed}
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={() => deposit()}
-            size="large"
+            onClick={onDeposit}
           >
             Convert BTC to Private ETH
           </Button>
@@ -159,34 +153,25 @@ export default function ConvertCard() {
     );
   };
 
-  if (!!contractAddress) {
-    return (
-      <>
-        {asyncNote.result && (
-          <Card className={classes.card} variant="outlined">
-            <CardContent className={classes.cardContent}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <EthSlider
-                    disabled={!!converting}
-                    onChange={setEthToRetrieve}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <NoteOrWarning />
-                </Grid>
+  return (
+    <>
+      {preparedDeposit.result && (
+        <Card className={classes.card} variant="outlined">
+          <CardContent className={classes.cardContent}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <EthSlider
+                  disabled={!!converting}
+                  onChange={setEthToRetrieve}
+                />
               </Grid>
-            </CardContent>
-          </Card>
-        )}
-      </>
-    );
-  } else {
-    return (
-      <Alert severity="warning">
-        <AlertTitle>This dApp work</AlertTitle>
-        This is a warning alert — <strong>check it out!</strong>
-      </Alert>
-    );
-  }
+              <Grid item xs={12}>
+                <NoteOrWarning />
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      )}
+    </>
+  );
 }

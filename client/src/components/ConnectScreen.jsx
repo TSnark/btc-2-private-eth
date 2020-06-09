@@ -10,48 +10,89 @@ import WrongNetworkPopup from "./WrongNetworkPopup";
 export default function ConnectScreen({ onConnect, onDisconnect }) {
   const [popupOpen, setPopupOpen] = useState(false);
 
-  const memoizedConnect = useCallback(
-    async (event) => {
-      const providerOptions = {
-        walletconnect: {
-          package: WalletConnectProvider,
-          options: {
-            infuraId: "34551d538c09417bab045d7ae2b20a83",
-          },
-        },
-      };
-
-      const web3Modal = new Web3Modal({
-        cacheProvider: true,
-        providerOptions,
-        theme: "dark",
+  const memoizedConnect = useCallback(async () => {
+    function subscribeToProviderEvents(provider, web3, networkId, accounts) {
+      provider.on("accountsChanged", (newAccounts) => {
+        if (Array.isArray(newAccounts) && newAccounts.length) {
+          onConnect({
+            web3,
+            accounts: newAccounts,
+            networkId,
+            connected: true,
+          });
+        } else {
+          onDisconnect();
+        }
       });
 
+      provider.on("networkChanged", (newNetworkId) => {
+        if (isNetworkSuppported(newNetworkId)) {
+          onConnect({
+            web3,
+            accounts,
+            networkId: newNetworkId,
+            connected: true,
+          });
+        } else {
+          onDisconnect();
+          setPopupOpen(true);
+        }
+      });
+    }
+
+    const web3Modal = setupWeb3Modal();
+
+    try {
       const provider = await web3Modal.connect();
       const web3 = new Web3(provider);
       const networkId = await web3.eth.net.getId();
-
-      if (networkId !== 42) {
-        setPopupOpen(true);
-        return;
+      if (provider.isMetaMask) {
+        provider.autoRefreshOnNetworkChange = false;
       }
 
       const accounts = await web3.eth.getAccounts();
-      provider.on("accountsChanged", (accounts) => {
-        if (!Array.isArray(accounts) || !accounts.length) {
-          onDisconnect();
-        }
-        onConnect({ web3, accounts, networkId });
-      });
 
-      provider.on("networkChanged", (accounts) => {
-        onConnect({ web3, accounts, networkId });
-      });
+      subscribeToProviderEvents(provider, web3, networkId, accounts);
+      setPopupOpen(!isNetworkSuppported(networkId));
+      if (
+        Array.isArray(accounts) &&
+        accounts.length &&
+        isNetworkSuppported(networkId)
+      ) {
+        onConnect({
+          web3,
+          accounts,
+          networkId,
+          connected: true,
+        });
+      }
+    } catch (error) {
+      console.log("error: " + error);
+      onDisconnect();
+    }
+  }, [onConnect, onDisconnect]);
 
-      onConnect({ web3, accounts, networkId });
-    },
-    [onConnect, onDisconnect]
-  );
+  function isNetworkSuppported(networkId) {
+    // eslint-disable-next-line
+    return networkId == 42; //Network Id can be both string or number
+  }
+
+  function setupWeb3Modal() {
+    const providerOptions = {
+      walletconnect: {
+        package: WalletConnectProvider,
+        options: {
+          infuraId: "34551d538c09417bab045d7ae2b20a83",
+        },
+      },
+    };
+    const web3Modal = new Web3Modal({
+      cacheProvider: true,
+      providerOptions,
+      theme: "dark",
+    });
+    return web3Modal;
+  }
 
   useEffect(() => {
     memoizedConnect();

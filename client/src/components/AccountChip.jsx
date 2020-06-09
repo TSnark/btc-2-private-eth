@@ -9,10 +9,9 @@ function ellipsisMiddle(str) {
 
 export default function AccountChip() {
   const context = useContext(Web3Context);
-
   return (
     <>
-      {!!context && (
+      {!!context && !!context.accounts && (
         <Chip
           icon={<CheckCircleOutlineIcon />}
           label={ellipsisMiddle(context.accounts[0])}
