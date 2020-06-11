@@ -81,7 +81,7 @@ export default function AboutDialog() {
               color="inherit"
               underline="always"
             >
-              RenVm
+              RenVM
             </Link>
             {", "}
             <Link

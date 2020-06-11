@@ -92,7 +92,8 @@ export default function ConvertCard({ deposit }) {
       await deposit(
         preparedDeposit.result.btcToTransferInSats,
         preparedDeposit.result.commitment,
-        ethToRetrieve
+        ethToRetrieve,
+        preparedDeposit.result.note
       );
       setConverting(false);
     } catch (error) {

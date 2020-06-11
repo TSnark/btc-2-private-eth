@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ConnectButton from "./ConnectButton";
@@ -94,10 +94,6 @@ export default function ConnectScreen({ onConnect, onDisconnect }) {
     return web3Modal;
   }
 
-  useEffect(() => {
-    memoizedConnect();
-  }, [memoizedConnect]);
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -105,8 +101,7 @@ export default function ConnectScreen({ onConnect, onDisconnect }) {
           Convert your Bitcoin to privacy preserving Ether.
         </Typography>
         <Typography variant="subtitle1" gutterBottom>
-          By using this dApp you can on ramp to the Ethereum world without
-          privacy concerns.
+          Use this dApp to on-ramp to Ethereum while retaining privacy.
         </Typography>
       </Grid>
       <Grid item xs={12}>
