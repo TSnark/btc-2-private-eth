@@ -1431,6 +1431,9 @@
   "networks": {
     "42": {
       "address": "0xf432cabd3ca97897777b695a988cadc3692f2fe2"
+    },
+    "1": {
+      "address": "0x81fbef4704776cc5bba0a5df3a90056d2c6900b3"
     }
   }
 }

@@ -1,0 +1,18 @@
+module.exports = {
+  kovan: {
+    renGatewayRegistry: "0x557e211ec5fc9a6737d2c6b7a1ade3e0c11a8d5d",
+    uniswapRouter: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+    tornado01: "0x8b3f5393bA08c24cc7ff5A66a832562aAB7bC95f",
+    tornado1: "0xD6a6AC46d02253c938B96D12BE439F570227aE8E",
+    tornado10: "0xe1BE96331391E519471100c3c1528B66B8F4e5a7",
+    tornado100: "0xd037E0Ac98Dab2fCb7E296c69C6e52767Ae5414D",
+  },
+  mainnet: {
+    renGatewayRegistry: "0xe80d347DF1209a76DD9d2319d62912ba98C54DDD",
+    uniswapRouter: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+    tornado01: "0x12D66f87A04A9E220743712cE6d9bB1B5616B8Fc",
+    tornado1: "0x47CE0C6eD5B0Ce3d3A51fdb1C52DC66a7c3c2936",
+    tornado10: "0x910Cbd523D972eb0a6f4cAe4618aD62622b39DbF",
+    tornado100: "0xA160cdAB225685dA1d56aa342Ad8841c3b53f291",
+  },
+};

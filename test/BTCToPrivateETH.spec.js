@@ -1,12 +1,12 @@
-const {use, expect} = require("chai");
-const {utils, Contract, ContractFactory} = require("ethers");
+const { use, expect } = require("chai");
+const { utils, Contract, ContractFactory } = require("ethers");
 const {
   deployMockContract,
   MockProvider,
   solidity,
   deployContract,
 } = require("ethereum-waffle");
-const IUniswapV2Router01 = require("../build/IUniswapV2Router01.json");
+const IUniswapV2Router02 = require("../build/IUniswapV2Router02.json");
 const IGatewayRegistry = require("../build/IGatewayRegistry.json");
 const IGateway = require("../build/IGateway.json");
 const Tornado = require("../build/Tornado.json");
@@ -20,10 +20,14 @@ describe("BTCToPrivateETHTests", function () {
   let mockGatewayRegistry;
   let mockGateway;
   let mockUniswapRouter;
-  let mockTornado;
+  let mockTornado01;
+  let mockTornado1;
+  let mockTornado10;
+  let mockTornado100;
   let mockIERC20;
   let mockWETH;
   let contract;
+  let mockTornados;
 
   // const provider = waffle.provider;
   const provider = new MockProvider();
@@ -46,24 +50,35 @@ describe("BTCToPrivateETHTests", function () {
     mockGateway = await deployMockContract(wallet, IGateway.abi);
     mockUniswapRouter = await deployMockContract(
       wallet,
-      IUniswapV2Router01.abi
+      IUniswapV2Router02.abi
     );
-    mockTornado = await deployMockContract(wallet, Tornado.abi);
+    mockTornado01 = await deployMockContract(wallet, Tornado.abi);
+    mockTornado1 = await deployMockContract(wallet, Tornado.abi);
+    mockTornado10 = await deployMockContract(wallet, Tornado.abi);
+    mockTornado100 = await deployMockContract(wallet, Tornado.abi);
     mockIERC20 = await deployMockContract(wallet, IERC20.abi);
     mockWETH = await deployMockContract(wallet, WETH.abi);
-    // const Greeter = await ContractFactory("BTCToPrivateETH");
+
+    mockTornados = {
+      [utils.parseEther("0.1")]: mockTornado01,
+      [utils.parseEther("1")]: mockTornado1,
+      [utils.parseEther("10")]: mockTornado10,
+      [utils.parseEther("100")]: mockTornado100,
+    };
+
     contract = await deployContract(wallet, BTCToPrivateETH, [
       mockGatewayRegistry.address,
       mockUniswapRouter.address,
-      mockTornado.address,
+      mockTornado01.address,
+      mockTornado1.address,
+      mockTornado10.address,
+      mockTornado100.address,
     ]);
   });
 
-  it("Convert all minted renBTC into 1 ether and deposits correctly", async function () {
-    const ethAmountSwapped = "1.0";
-    const ethAmountWanted = "1.0";
+  async function happyPathTest(ethAmountWanted) {
+    const ethAmountSwapped = ethAmountWanted;
     const ethAmountDeposited = ethAmountWanted;
-    const ethAmountReturned = "0.0";
     const btcAmountMintedInSats = 100;
     const commitmentB32 = utils.formatBytes32String("commitment");
     const nHash = utils.formatBytes32String("nHash");
@@ -82,10 +97,13 @@ describe("BTCToPrivateETHTests", function () {
     );
     await mockGatewayRegistry.mock.getTokenBySymbol.returns(mockIERC20.address);
     await mockUniswapRouter.mock.getAmountsOut.returns([
+      0,
       utils.parseEther(ethAmountSwapped),
     ]);
     await mockUniswapRouter.mock.swapExactTokensForETH.returns([]);
     await mockUniswapRouter.mock.WETH.returns(mockWETH.address);
+
+    const mockTornado = mockTornados[utils.parseEther(ethAmountWanted)];
     await mockTornado.mock.deposit.returns();
     await mockIERC20.mock.approve.returns(true);
     const now = (await provider.getBlock()).timestamp;
@@ -147,7 +165,19 @@ describe("BTCToPrivateETHTests", function () {
     ]);
 
     expect("deposit").to.be.calledOnContractWith(mockTornado, [commitmentB32]);
-  });
+  }
+
+  it("Convert all minted renBTC into 0.1 ether and deposits correctly", async () =>
+    happyPathTest("0.1"));
+
+  it("Convert all minted renBTC into 1 ether and deposits correctly", async () =>
+    happyPathTest("1"));
+
+  it("Convert all minted renBTC into 10 ether and deposits correctly", async () =>
+    happyPathTest("10"));
+
+  it("Convert all minted renBTC into 100 ether and deposits correctly", async () =>
+    happyPathTest("100"));
 
   it("Minted renBTC swap for more than required ether and change gets returned", async function () {
     const ethAmountWanted = "1.0";
@@ -173,9 +203,11 @@ describe("BTCToPrivateETHTests", function () {
     await mockGatewayRegistry.mock.getTokenBySymbol.returns(mockIERC20.address);
     await mockUniswapRouter.mock.swapExactTokensForETH.returns([]);
     await mockUniswapRouter.mock.getAmountsOut.returns([
+      0,
       utils.parseEther(ethAmountSwapped),
     ]);
     await mockUniswapRouter.mock.WETH.returns(mockWETH.address);
+    const mockTornado = mockTornados[utils.parseEther(ethAmountWanted)];
     await mockTornado.mock.deposit.returns();
     await mockIERC20.mock.approve.returns(true);
     const now = (await provider.getBlock()).timestamp;
@@ -266,6 +298,7 @@ describe("BTCToPrivateETHTests", function () {
     );
     await mockGatewayRegistry.mock.getTokenBySymbol.returns(mockIERC20.address);
     await mockUniswapRouter.mock.getAmountsOut.returns([
+      0,
       utils.parseEther(ethAmountWanted),
     ]);
     await mockUniswapRouter.mock.swapExactTokensForETH.reverts();
@@ -347,6 +380,7 @@ describe("BTCToPrivateETHTests", function () {
     );
     await mockGatewayRegistry.mock.getTokenBySymbol.returns(mockIERC20.address);
     await mockUniswapRouter.mock.getAmountsOut.returns([
+      0,
       utils.parseEther(ethAmountSwapped),
     ]);
     await mockUniswapRouter.mock.swapExactTokensForETH.returns([]);
@@ -414,6 +448,7 @@ describe("BTCToPrivateETHTests", function () {
     );
     await mockGatewayRegistry.mock.getTokenBySymbol.returns(mockIERC20.address);
     await mockUniswapRouter.mock.getAmountsOut.returns([
+      0,
       utils.parseEther(ethAmountWanted),
     ]);
     await mockUniswapRouter.mock.swapExactTokensForETH.returns([]);
@@ -476,6 +511,7 @@ describe("BTCToPrivateETHTests", function () {
     );
     await mockGatewayRegistry.mock.getTokenBySymbol.returns(mockIERC20.address);
     await mockUniswapRouter.mock.getAmountsOut.returns([
+      0,
       utils.parseEther(ethAmountWanted),
     ]);
     await mockUniswapRouter.mock.swapExactTokensForETH.returns([]);

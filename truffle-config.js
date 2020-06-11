@@ -14,9 +14,11 @@ module.exports = {
   contracts_build_directory: path.join(__dirname, "client/src/contracts"),
   networks: {
     develop: {
+      host: "localhost",
+      network_id: 5777,
       port: 8545,
     },
-    "kovan-infura": {
+    kovan: {
       provider: () =>
         new HDWalletProvider(
           kovanPrivateKey,
@@ -24,6 +26,9 @@ module.exports = {
         ),
       network_id: 42,
       gas: 4700000,
+    },
+    mainnet: {
+      network_id: 1,
     },
   },
 };

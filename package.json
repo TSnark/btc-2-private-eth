@@ -21,6 +21,6 @@
   },
   "scripts": {
     "build": "waffle",
-    "test": "mocha"
+    "test": "mocha --timeout 10000"
   }
 }
