@@ -65,12 +65,7 @@ export default function ConvertScreen() {
     setContractAddress(BTCToPrivateETH.networks[networkId].address);
   }, [networkId, recoverLastTransfer]);
 
-  const deposit = async (
-    btcToTransferInSats,
-    commitment,
-    ethToRetrieve,
-    note
-  ) => {
+  const deposit = async (btcToTransfer, commitment, ethToRetrieve, note) => {
     setNote(note);
     await gatewayJS
       .open({
@@ -78,7 +73,7 @@ export default function ConvertScreen() {
         sendToken: GatewayJS.Tokens.BTC.Btc2Eth,
 
         // Amount of BTC we are sending (in Satoshis)
-        suggestedAmount: btcToTransferInSats,
+        suggestedAmount: btcToTransfer,
 
         sendTo: contractAddress,
 

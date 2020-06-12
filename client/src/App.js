@@ -3,6 +3,7 @@ import MainPage from "./pages/MainPage";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import "./App.css";
+import { IntlProvider } from "react-intl";
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -22,10 +23,12 @@ const darkTheme = createMuiTheme({
 class App extends Component {
   render() {
     return (
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
-        <MainPage />
-      </ThemeProvider>
+      <IntlProvider locale={navigator.language}>
+        <ThemeProvider theme={darkTheme}>
+          <CssBaseline />
+          <MainPage />
+        </ThemeProvider>
+      </IntlProvider>
     );
   }
 }

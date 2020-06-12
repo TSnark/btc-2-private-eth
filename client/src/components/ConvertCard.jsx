@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { deposit as tornado } from "../utils/TornadoUtils";
-import estimateAmountToSwap from "../utils/PricingUtils";
+import priceConversion from "../utils/PricingUtils";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import Grid from "@material-ui/core/Grid";
@@ -9,6 +9,7 @@ import { Card, CardContent } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/core/styles";
 import EthSlider from "./EthSlider";
+import PricingSummary from "./PricingSummary";
 import TornadoCashNote from "./TornadoCashNote";
 import { useAsync } from "react-async-hook";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
@@ -31,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(6),
     paddingLeft: theme.spacing(6),
   },
+  pricingSummary: {
+    margin: theme.spacing(2, 0, 0),
+  },
   checkbox: {
     margin: theme.spacing(2, 0, 0),
   },
@@ -41,18 +45,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const prepareDeposit = async (web3, ethToRetrieve) => {
-  let { btcToTransferInSats, ethReserveInWei } = await estimateAmountToSwap(
-    web3,
-    ethToRetrieve
-  );
+  let {
+    btcToTransfer,
+    ethReserveInWei,
+    priceImpact,
+    price,
+  } = await priceConversion(web3, ethToRetrieve);
   const enoughLiquidity = ethReserveInWei > ethToRetrieve;
   let { note, commitment } = await tornado(web3, ethToRetrieve);
   return {
     enoughLiquidity,
-    btcToTransferInSats,
+    btcToTransfer,
     ethReserveInWei,
     note,
     commitment,
+    priceImpact,
+    price,
   };
 };
 
@@ -90,7 +98,7 @@ export default function ConvertCard({ deposit }) {
     setConverting(true);
     try {
       await deposit(
-        preparedDeposit.result.btcToTransferInSats,
+        preparedDeposit.result.btcToTransfer,
         preparedDeposit.result.commitment,
         ethToRetrieve,
         preparedDeposit.result.note
@@ -115,10 +123,17 @@ export default function ConvertCard({ deposit }) {
     ) : (
       <>
         <Grid item xs={12}>
+          {preparedDeposit.result.approximateSlippage}
           <TornadoCashNote
             id="tornado-note"
             title="Tornado Cash Note"
             content={preparedDeposit.result.note}
+          />
+        </Grid>
+        <Grid item xs={12} className={classes.pricingSummary}>
+          <PricingSummary
+            price={preparedDeposit.result.price}
+            priceImpact={preparedDeposit.result.priceImpact}
           />
         </Grid>
         <Grid item xs={12}>
@@ -137,6 +152,7 @@ export default function ConvertCard({ deposit }) {
             />
           </FormGroup>
         </Grid>
+
         <Grid item xs={12}>
           <Button
             disabled={!!converting || !agreed}

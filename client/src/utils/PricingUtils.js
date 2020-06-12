@@ -3,7 +3,10 @@ import JSBI from "jsbi";
 
 import { Token, TokenAmount, Pair, WETH } from "@uniswap/sdk";
 
-export default async function estimateAmountToSwap(web3, amountToConvertInWei) {
+const uniswapFees = 0.003;
+const weiToSatoshi = 1e10;
+
+export default async function priceConversion(web3, amountToConvertInWei) {
   const networkId = await web3.eth.net.getId();
   const deployedNetwork = IUniswapV2Pair.networks[networkId];
 
@@ -29,15 +32,22 @@ export default async function estimateAmountToSwap(web3, amountToConvertInWei) {
   let ethAmount = new TokenAmount(uniswapETH, amountToConvertInWei);
   try {
     const btcTokenAmount = uniswapPair.getInputAmount(ethAmount)[0];
-    let btcToTransferInSats = addPricingSafetyMargin(btcTokenAmount.raw);
+    let btcToTransfer = addPricingSafetyMargin(btcTokenAmount.raw);
+    const spotPrice = reserve0 / reserve1;
+    const orderPrice = btcTokenAmount.raw / amountToConvertInWei;
+    const priceImpact = (1 - uniswapFees - spotPrice / orderPrice).toFixed(3);
     return {
-      btcToTransferInSats: btcToTransferInSats,
+      price: orderPrice * weiToSatoshi,
+      priceImpact,
+      btcToTransfer,
       ethReserveInWei: reserve1,
     };
   } catch (e) {
     console.log(e);
     return {
-      btcToTransferInSats: 0,
+      price: 0,
+      priceImpact: 1,
+      btcToTransfer: 0,
       ethReserveInWei: reserve1,
     };
   }
