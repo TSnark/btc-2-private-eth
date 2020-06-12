@@ -34,16 +34,18 @@ export default function MainPage() {
           className={classes.content}
           direction="column"
         >
-          <Container component="main" maxWidth="xs">
-            {!web3State.connected ? (
+          {!web3State.connected ? (
+            <Container component="main" maxWidth="xs">
               <ConnectScreen
                 onConnect={setWeb3State}
                 onDisconnect={() => setWeb3State({ connected: false })}
               />
-            ) : (
+            </Container>
+          ) : (
+            <Container component="main" maxWidth="sm" fixed>
               <ConvertScreen />
-            )}
-          </Container>
+            </Container>
+          )}
         </Grid>
       </Grid>
     </Web3Context.Provider>
