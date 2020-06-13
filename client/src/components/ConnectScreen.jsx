@@ -30,7 +30,7 @@ export default function ConnectScreen({ onConnect, onDisconnect }) {
           onConnect({
             web3,
             accounts,
-            networkId: newNetworkId,
+            networkId: newNetworkId.toString(),
             connected: true,
           });
         } else {
@@ -62,7 +62,7 @@ export default function ConnectScreen({ onConnect, onDisconnect }) {
         onConnect({
           web3,
           accounts,
-          networkId,
+          networkId: networkId.toString(),
           connected: true,
         });
       }
@@ -73,8 +73,7 @@ export default function ConnectScreen({ onConnect, onDisconnect }) {
   }, [onConnect, onDisconnect]);
 
   function isNetworkSuppported(networkId) {
-    // eslint-disable-next-line
-    return networkId == 42; //Network Id can be both string or number
+    return networkId === 42;
   }
 
   function setupWeb3Modal() {

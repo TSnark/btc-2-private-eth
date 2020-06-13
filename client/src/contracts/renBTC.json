@@ -1,0 +1,14 @@
+{
+  "contractName": "renBTC",
+  "networks": {
+    "42": {
+      "name": "testBTC",
+      "address": "0x0a9add98c076448cbcfacf5e457da12ddbef4a8f"
+    },
+    "1": {
+      "name": "renBTC",
+      "address": "0xfB556544fA588796db66e1293Ca95b3107861126"
+    }
+  },
+  "networkType": "ethereum"
+}

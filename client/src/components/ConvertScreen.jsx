@@ -19,13 +19,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ConvertScreen() {
   const [contractAddress, setContractAddress] = useState();
-  const [gatewayJS] = useState(new GatewayJS("testnet"));
+  const [gatewayJS, setGatewayJS] = useState();
   const [loading, setLoading] = useState(true);
   const [recovering, setRecovering] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [note, setNote] = useState();
   const { web3, accounts, networkId } = useContext(Web3Context);
   const classes = useStyles();
+
   // We recover only the previous "active" transaction and force the user
   // to deal with it.
   const recoverLastTransfer = useCallback(async () => {
@@ -60,10 +61,13 @@ export default function ConvertScreen() {
   }
 
   useEffect(() => {
-    // setLoading(true);
-    recoverLastTransfer(setLoading);
+    setGatewayJS(new GatewayJS(networkId === "1" ? "mainnet" : "testnet"));
     setContractAddress(BTCToPrivateETH.networks[networkId].address);
-  }, [networkId, recoverLastTransfer]);
+  }, [networkId]);
+
+  useEffect(() => {
+    recoverLastTransfer(setLoading);
+  }, [recoverLastTransfer]);
 
   const deposit = async (btcToTransfer, commitment, ethToRetrieve, note) => {
     setNote(note);
