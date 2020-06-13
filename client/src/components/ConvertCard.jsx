@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(6),
   },
   pricingSummary: {
-    margin: theme.spacing(2, 0, 0),
+    margin: theme.spacing(3, 0, 0),
   },
   checkbox: {
     margin: theme.spacing(2, 0, 0),

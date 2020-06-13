@@ -8,6 +8,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useIntl } from "react-intl";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import HTMLTooltip from "./HTMLTooltip";
 
 const useStyles = makeStyles(() => ({
   cellRoot: {
@@ -29,6 +31,8 @@ export default function PricingSummary({ price, priceImpact }) {
         })} BTC per ETH `,
       },
       {
+        description:
+          "Estimated difference between spot price and your trade price due to order size.",
         color: priceImpact > 0.05 ? "error" : "inherit",
         label: "Price Impact",
         value: intl.formatNumber(priceImpact, {
@@ -50,7 +54,7 @@ export default function PricingSummary({ price, priceImpact }) {
           <>
             <TableRow key={row.label}>
               <TableCell classes={{ root: classes.cellRoot }} padding="none">
-                <Typography color={row.color} variant="caption">
+                <Typography color={row.color} variant="body1">
                   {row.label}
                 </Typography>
               </TableCell>
@@ -59,10 +63,21 @@ export default function PricingSummary({ price, priceImpact }) {
                 classes={{ root: classes.cellRoot }}
                 padding="none"
               >
-                <Typography color={row.color} variant="caption">
+                <Typography color={row.color} variant="body1">
                   {row.value}
                 </Typography>
               </TableCell>
+              {row.description && (
+                <TableCell
+                  align="right"
+                  classes={{ root: classes.cellRoot }}
+                  padding="none"
+                >
+                  <HTMLTooltip arrow title={row.description}>
+                    <InfoOutlinedIcon fontSize="small" />
+                  </HTMLTooltip>
+                </TableCell>
+              )}
             </TableRow>
           </>
         ))}
