@@ -31,19 +31,21 @@ export default function ConvertScreen() {
   // to deal with it.
   const recoverLastTransfer = useCallback(async () => {
     try {
-      // Load previous transfer from local storage
-      setLoading(true);
-      const previousGateways = await gatewayJS.getGateways();
-      const previousTransfers = Array.from(previousGateways.values());
-      setLoading(false);
-      // Resume last transfer if still active
-      if (isActiveTransfer(previousTransfers[0])) {
-        setRecovering(true);
-        await gatewayJS
-          .recoverTransfer(web3.currentProvider, previousTransfers[0])
-          .pause()
-          .result();
-        setRecovering(false);
+      if (!!gatewayJS) {
+        // Load previous transfer from local storage
+        setLoading(true);
+        const previousGateways = await gatewayJS.getGateways();
+        const previousTransfers = Array.from(previousGateways.values());
+        setLoading(false);
+        // Resume last transfer if still active
+        if (isActiveTransfer(previousTransfers[0])) {
+          setRecovering(true);
+          await gatewayJS
+            .recoverTransfer(web3.currentProvider, previousTransfers[0])
+            .pause()
+            .result();
+          setRecovering(false);
+        }
       }
     } catch (e) {
       setLoading(false);

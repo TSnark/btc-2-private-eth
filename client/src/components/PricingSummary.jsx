@@ -51,35 +51,33 @@ export default function PricingSummary({ price, priceImpact }) {
     <Table className={classes.root} size="small">
       <TableBody>
         {rows.map((row) => (
-          <>
-            <TableRow key={row.label}>
-              <TableCell classes={{ root: classes.cellRoot }} padding="none">
-                <Typography color={row.color} variant="body1">
-                  {row.label}
-                </Typography>
-              </TableCell>
+          <TableRow key={row.label}>
+            <TableCell classes={{ root: classes.cellRoot }} padding="none">
+              <Typography color={row.color} variant="body1">
+                {row.label}
+              </Typography>
+            </TableCell>
+            <TableCell
+              align="right"
+              classes={{ root: classes.cellRoot }}
+              padding="none"
+            >
+              <Typography color={row.color} variant="body1">
+                {row.value}
+              </Typography>
+            </TableCell>
+            {row.description && (
               <TableCell
                 align="right"
                 classes={{ root: classes.cellRoot }}
                 padding="none"
               >
-                <Typography color={row.color} variant="body1">
-                  {row.value}
-                </Typography>
+                <HTMLTooltip arrow title={row.description}>
+                  <InfoOutlinedIcon fontSize="small" />
+                </HTMLTooltip>
               </TableCell>
-              {row.description && (
-                <TableCell
-                  align="right"
-                  classes={{ root: classes.cellRoot }}
-                  padding="none"
-                >
-                  <HTMLTooltip arrow title={row.description}>
-                    <InfoOutlinedIcon fontSize="small" />
-                  </HTMLTooltip>
-                </TableCell>
-              )}
-            </TableRow>
-          </>
+            )}
+          </TableRow>
         ))}
       </TableBody>
     </Table>

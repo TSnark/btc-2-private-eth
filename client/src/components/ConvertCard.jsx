@@ -1,6 +1,4 @@
 import React, { useState, useContext } from "react";
-import { deposit as tornado } from "../utils/TornadoUtils";
-import priceConversion from "../utils/PricingUtils";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import Grid from "@material-ui/core/Grid";
@@ -11,10 +9,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import EthSlider from "./EthSlider";
 import PricingSummary from "./PricingSummary";
 import TornadoCashNote from "./TornadoCashNote";
-import { useAsync } from "react-async-hook";
-import AwesomeDebouncePromise from "awesome-debounce-promise";
-import useConstant from "use-constant";
 import Web3Context from "../state/Web3Context";
+import usePrepareDeposit from "../hooks/usePrepareDeposit";
+import GridLoader from "react-spinners/GridLoader";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -42,60 +39,29 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 24,
     margin: theme.spacing(2, 0, 2),
   },
+  spinner: {
+    display: "flex",
+    justifyContent: "center",
+    margin: theme.spacing(24, 0, 0),
+  },
 }));
-
-const prepareDeposit = async (web3, ethToRetrieve) => {
-  let {
-    btcToTransfer,
-    ethReserveInWei,
-    priceImpact,
-    price,
-  } = await priceConversion(web3, ethToRetrieve);
-  const enoughLiquidity = ethReserveInWei > ethToRetrieve;
-  let { note, commitment } = await tornado(web3, ethToRetrieve);
-  return {
-    enoughLiquidity,
-    btcToTransfer,
-    ethReserveInWei,
-    note,
-    commitment,
-    priceImpact,
-    price,
-  };
-};
 
 export default function ConvertCard({ deposit }) {
   const [ethToRetrieve, setEthToRetrieve] = useState(1e17);
-  const [converting, setConverting] = useState(false);
+  const [awaitingTransaction, setAwaitingTransaction] = useState(false);
   const [agreed, setAgreed] = useState(false);
 
   const classes = useStyles();
   const { web3 } = useContext(Web3Context);
 
-  // We debounce to avoid race conditions on state changes
-  const debouncedPrepareDeposit = useConstant(() =>
-    AwesomeDebouncePromise((web3, ethToRetrieve) => {
-      setAgreed(false);
-      return prepareDeposit(web3, ethToRetrieve);
-    }, 300)
-  );
-
   // Call debounced function asynchronously...
-  const preparedDeposit = useAsync(
-    debouncedPrepareDeposit,
-    [web3, ethToRetrieve],
-    {
-      // ...refresh state only after call returns
-      setLoading: (state) => ({ ...state, loading: true }),
-    }
-  );
-
+  const preparedDeposit = usePrepareDeposit(web3, ethToRetrieve);
   const handleCheckBoxEvent = (event) => {
     setAgreed(event.target.checked);
   };
 
   const onDeposit = async () => {
-    setConverting(true);
+    setAwaitingTransaction(true);
     try {
       await deposit(
         preparedDeposit.result.btcToTransfer,
@@ -103,9 +69,9 @@ export default function ConvertCard({ deposit }) {
         ethToRetrieve,
         preparedDeposit.result.note
       );
-      setConverting(false);
+      setAwaitingTransaction(false);
     } catch (error) {
-      setConverting(false);
+      setAwaitingTransaction(false);
       console.log(error);
     }
   };
@@ -141,7 +107,7 @@ export default function ConvertCard({ deposit }) {
             <FormControlLabel
               control={
                 <Checkbox
-                  disabled={!!converting}
+                  disabled={!!awaitingTransaction}
                   checked={agreed}
                   onChange={handleCheckBoxEvent}
                   name="agreeCB"
@@ -155,7 +121,7 @@ export default function ConvertCard({ deposit }) {
 
         <Grid item xs={12}>
           <Button
-            disabled={!!converting || !agreed}
+            disabled={!!awaitingTransaction || !agreed}
             type="submit"
             fullWidth
             variant="contained"
@@ -170,25 +136,34 @@ export default function ConvertCard({ deposit }) {
     );
   };
 
-  return (
-    <>
-      {preparedDeposit.result && (
-        <Card className={classes.card} variant="outlined">
-          <CardContent className={classes.cardContent}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <EthSlider
-                  disabled={!!converting}
-                  onChange={setEthToRetrieve}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <NoteOrWarning />
-              </Grid>
+  if (!preparedDeposit.result) {
+    return (
+      <div className={classes.spinner}>
+        <GridLoader size={16} color={"#123abc"} loading={true} />
+      </div>
+    );
+  } else {
+    return (
+      <Card className={classes.card} variant="outlined">
+        <CardContent className={classes.cardContent}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <EthSlider
+                disabled={!!awaitingTransaction}
+                onChange={(value) => {
+                  if (value !== ethToRetrieve) {
+                    setEthToRetrieve(value);
+                    setAgreed(false);
+                  }
+                }}
+              />
             </Grid>
-          </CardContent>
-        </Card>
-      )}
-    </>
-  );
+            <Grid item xs={12}>
+              <NoteOrWarning />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    );
+  }
 }
