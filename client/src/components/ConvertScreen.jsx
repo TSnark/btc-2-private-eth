@@ -35,15 +35,22 @@ export default function ConvertScreen() {
         // Load previous transfer from local storage
         setLoading(true);
         const previousGateways = await gatewayJS.getGateways();
-        const previousTransfers = Array.from(previousGateways.values());
+        const previousTransfers = Array.from(previousGateways.values()) || [];
         setLoading(false);
-        // Resume last transfer if still active
-        if (isActiveTransfer(previousTransfers[0])) {
+
+        if (!!previousTransfers) {
           setRecovering(true);
-          await gatewayJS
-            .recoverTransfer(web3.currentProvider, previousTransfers[0])
-            .pause()
-            .result();
+          // Resume last already paid transfers
+          await Promise.allSettled(
+            previousTransfers
+              .filter(isPaidTransfer)
+              .map((previousTransfer) =>
+                gatewayJS
+                  .recoverTransfer(web3.currentProvider, previousTransfer)
+                  .pause()
+                  .result()
+              )
+          );
           setRecovering(false);
         }
       }
@@ -54,7 +61,7 @@ export default function ConvertScreen() {
     }
   }, [web3, gatewayJS]);
 
-  function isActiveTransfer(previousTransfer) {
+  function isPaidTransfer(previousTransfer) {
     return (
       !!previousTransfer &&
       (previousTransfer.status === "mint_deposited" ||
@@ -68,7 +75,7 @@ export default function ConvertScreen() {
   }, [networkId]);
 
   useEffect(() => {
-    recoverLastTransfer(setLoading);
+    recoverLastTransfer();
   }, [recoverLastTransfer]);
 
   const deposit = async (btcToTransfer, commitment, ethToRetrieve, note) => {
@@ -123,9 +130,9 @@ export default function ConvertScreen() {
   } else if (recovering) {
     return (
       <Alert severity="warning">
-        <AlertTitle>Pending transaction detected. </AlertTitle>
-        Complete your previous transaction before starting a new one. Failing to
-        do so will result in loss of funds.
+        <AlertTitle>Pending transactions detected. </AlertTitle>
+        Complete your previous transactions before starting a new one. Failing
+        to do so will result in loss of funds.
       </Alert>
     );
   } else if (completed) {
