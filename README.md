@@ -1,6 +1,6 @@
 ## BTC to Private ETH
 
-This is a very preliminary version.
+This is a very preliminary test version.
 
 [Live test version](https://tsnark.github.io/btc-2-private-eth/).
 
