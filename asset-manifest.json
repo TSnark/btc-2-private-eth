@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/btc-2-private-eth/static/css/main.82f77540.chunk.css",
+    "main.js": "/btc-2-private-eth/static/js/main.3e091f8b.chunk.js",
+    "main.js.map": "/btc-2-private-eth/static/js/main.3e091f8b.chunk.js.map",
+    "runtime-main.js": "/btc-2-private-eth/static/js/runtime-main.34a561d0.js",
+    "runtime-main.js.map": "/btc-2-private-eth/static/js/runtime-main.34a561d0.js.map",
+    "static/css/2.f831172a.chunk.css": "/btc-2-private-eth/static/css/2.f831172a.chunk.css",
+    "static/js/2.3b6ef39a.chunk.js": "/btc-2-private-eth/static/js/2.3b6ef39a.chunk.js",
+    "static/js/2.3b6ef39a.chunk.js.map": "/btc-2-private-eth/static/js/2.3b6ef39a.chunk.js.map",
+    "index.html": "/btc-2-private-eth/index.html",
+    "precache-manifest.085ed5f9153b34d235274ae03602fada.js": "/btc-2-private-eth/precache-manifest.085ed5f9153b34d235274ae03602fada.js",
+    "service-worker.js": "/btc-2-private-eth/service-worker.js",
+    "static/css/2.f831172a.chunk.css.map": "/btc-2-private-eth/static/css/2.f831172a.chunk.css.map",
+    "static/css/main.82f77540.chunk.css.map": "/btc-2-private-eth/static/css/main.82f77540.chunk.css.map",
+    "static/js/2.3b6ef39a.chunk.js.LICENSE.txt": "/btc-2-private-eth/static/js/2.3b6ef39a.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/btc-2-private-eth/static/media/logo.899f6e40.svg",
+    "static/media/index.css": "/btc-2-private-eth/static/media/roboto-latin-900italic.ebf6d164.woff2"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.34a561d0.js",
+    "static/css/2.f831172a.chunk.css",
+    "static/js/2.3b6ef39a.chunk.js",
+    "static/css/main.82f77540.chunk.css",
+    "static/js/main.3e091f8b.chunk.js"
+  ]
+}
